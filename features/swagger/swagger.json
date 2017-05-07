@@ -1,0 +1,443 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title": "ECMA2015 Backend Example",
+		"description": "Documents all APIs related with this project",
+		"version": "0.0.1"
+	},
+	"host": "ecma2015-backend-model.w3ibm.mybluemix.net",
+	"schemes": [
+		"http"
+	],
+	"basePath": "/api",
+	"produces": [
+		"application/json"
+	],
+	"paths": {
+		"/authenticate": {
+			"post": {
+				"summary": "Authenticate on LDAP",
+				"description": "Based on the user''s intranet ID and password will validate into the bluepages (through LDAP) if user does exists.\n",
+				"parameters": [
+					{
+						"name": "username",
+						"in": "formData",
+						"description": "Intranet's ID of the user",
+						"required": true,
+						"type": "string",
+						"format": "email"
+					},
+					{
+						"name": "password",
+						"in": "formData",
+						"description": "Intranet's password of the user",
+						"required": true,
+						"type": "string",
+						"format": "password"
+					}
+				],
+				"tags": [
+					"Authentication"
+				],
+				"produces": [
+					"text/plain"
+				],
+				"responses": {
+					"200": {
+						"description": "A token",
+						"schema": {
+							"type": "string",
+							"description": "Holds and encripted key that represents an user logged into the app."
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/example": {
+			"post": {
+				"summary": "Insert users in the database",
+				"description": "Will insert a new user into the database",
+				"parameters": [
+					{
+						"name": "token",
+						"in": "query",
+						"description": "Contains the token returned by the authentication",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "uid",
+						"in": "formData",
+						"description": "Employee Serial + Country Code",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "married",
+						"in": "formData",
+						"description": "Are you married? True (Yes) / False (No)",
+						"required": true,
+						"type": "boolean"
+					},
+					{
+						"name": "age",
+						"in": "formData",
+						"description": "Your Age",
+						"required": true,
+						"type": "integer",
+						"format": "int32"
+					},
+					{
+						"name": "name",
+						"in": "formData",
+						"description": "Your name",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"name": "gender",
+						"in": "formData",
+						"description": "Are you Male, Female, Shemale?",
+						"required": false,
+						"type": "string"
+					}
+				],
+				"tags": [
+					"Example Feature"
+				],
+				"responses": {
+					"200": {
+						"description": "The status of the insert attempt",
+						"schema": {
+							"$ref": "#/definitions/database"
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"get": {
+				"summary": "Retrieve users from the database",
+				"description": "Will return the information based on the request of the user. If there is no uid to retrieve will return all entries",
+				"parameters": [
+					{
+						"name": "token",
+						"in": "query",
+						"description": "Contains the token returned from the authentication API",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "uid",
+						"in": "query",
+						"description": "Employee Serial + Country Code you want to retrieve",
+						"required": false,
+						"type": "string"
+					}
+				],
+				"tags": [
+					"Example Feature"
+				],
+				"responses": {
+					"200": {
+						"description": "Will return an array of objects",
+						"schema": {
+							"type": "object",
+							"required": [
+								"_id",
+								"_rev",
+								"created",
+								"modified",
+								"age",
+								"married",
+								"uid"
+							],
+							"properties": {
+								"_id": {
+									"type": "string",
+									"description": "Document unique ID"
+								},
+								"_rev": {
+									"type": "string",
+									"description": "Revision unique ID"
+								},
+								"created": {
+									"type": "string",
+									"description": "The timestamp when document was created into the database (based on server time) [Format: ISO 8601]"
+								},
+								"modified": {
+									"type": "string",
+									"description": "The timestamp when document was modified on the database (based on server time) [Format: ISO 8601]"
+								},
+								"uid": {
+									"type": "string",
+									"description": "The employee serial number and the country code associated with the country he was hired"
+								},
+								"age": {
+									"type": "integer",
+									"format": "int32",
+									"description": "The employee's age"
+								},
+								"married": {
+									"type": "string",
+									"description": "Asks if the employee is married"
+								},
+								"deleted": {
+									"type": "boolean",
+									"description": "True if is marked as deleted"
+								},
+								"name": {
+									"type": "string",
+									"description": "The employee's name"
+								},
+								"gender": {
+									"type": "string",
+									"description": "The employee's gender"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"put": {
+				"summary": "Update users on the database",
+				"description": "Will update an user on the database based on the content of body.",
+				"parameters": [
+					{
+						"name": "token",
+						"in": "query",
+						"description": "Contains the token returned from the authentication API",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "uid",
+						"in": "formData",
+						"description": "Employee Serial + Country Code",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "married",
+						"in": "formData",
+						"description": "Are you married? True (Yes) / False (No)",
+						"required": true,
+						"type": "boolean"
+					},
+					{
+						"name": "age",
+						"in": "formData",
+						"description": "Your Age",
+						"required": true,
+						"type": "integer",
+						"format": "int32"
+					},
+					{
+						"name": "name",
+						"in": "formData",
+						"description": "Your name",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"name": "gender",
+						"in": "formData",
+						"description": "Are you Male, Female, Shemale?",
+						"required": false,
+						"type": "string"
+					}
+				],
+				"tags": [
+					"Example Feature"
+				],
+				"responses": {
+					"200": {
+						"description": "The status of the update of the entry",
+						"schema": {
+							"$ref": "#/definitions/database"
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Mark as Deleted/Delete users on/from the database",
+				"description": "Will mark the user as removed on the database / Will remove the user from the database",
+				"parameters": [
+					{
+						"name": "token",
+						"in": "query",
+						"description": "Contains the token returned by the authentication",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "uid",
+						"in": "query",
+						"description": "Employee Serial + Country Code",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"tags": [
+					"Example Feature"
+				],
+				"responses": {
+					"200": {
+						"description": "The status of the delete attempt",
+						"schema": {
+							"$ref": "#/definitions/database"
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/example/custom": {
+			"get": {
+				"summary": "Retrieve deleted users from the database",
+				"description": "Will return the information based on the request of the user. If there is no uid to retrieve will return all entries.\n(Only documents marked as deleted)",
+				"parameters": [
+					{
+						"name": "token",
+						"in": "query",
+						"description": "Contains the token returned from the authentication API",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "uid",
+						"in": "query",
+						"description": "Employee Serial + Country Code you want to retrieve",
+						"required": false,
+						"type": "string"
+					}
+				],
+				"tags": [
+					"Example Feature"
+				],
+				"responses": {
+					"200": {
+						"description": "Will return an array of objects",
+						"schema": {
+							"type": "object",
+							"required": [
+								"_id",
+								"_rev",
+								"deleted",
+								"created",
+								"modified",
+								"age",
+								"married",
+								"uid"
+							],
+							"properties": {
+								"_id": {
+									"type": "string",
+									"description": "Document unique ID"
+								},
+								"_rev": {
+									"type": "string",
+									"description": "Revision unique ID"
+								},
+								"created": {
+									"type": "string",
+									"description": "The timestamp when document was created into the database (based on server time) [Format: ISO 8601]"
+								},
+								"modified": {
+									"type": "string",
+									"description": "The timestamp when document was modified on the database (based on server time) [Format: ISO 8601]"
+								},
+								"uid": {
+									"type": "string",
+									"description": "The employee serial number and the country code associated with the country he was hired"
+								},
+								"age": {
+									"type": "integer",
+									"format": "int32",
+									"description": "The employee's age"
+								},
+								"married": {
+									"type": "string",
+									"description": "Asks if the employee is married"
+								},
+								"deleted": {
+									"type": "boolean",
+									"description": "True if is marked as deleted"
+								},
+								"name": {
+									"type": "string",
+									"description": "The employee's name"
+								},
+								"gender": {
+									"type": "string",
+									"description": "The employee's gender"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"Error": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"message": {
+					"type": "string"
+				}
+			}
+		},
+		"database": {
+			"type": "object",
+			"properties": {
+				"ok": {
+					"type": "boolean"
+				},
+				"id": {
+					"type": "string"
+				},
+				"rev": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

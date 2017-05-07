@@ -1,0 +1,38 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+    	"exclude": ["node_modules"],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [],
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "default": {
+            "outputSourceFiles": true
+        }
+    },
+    "opts": {
+      "template": "./node_modules/ink-docstrap/template",
+      "encoding": "utf8",
+      "destination": "./jsdoc/",
+      "recurse": true
+    },
+    "templates": {
+        "systemName"            : "ECMA2015 Backend Model",
+        "footer"                : "",
+        "copyright"             : "IBM Copyright © Created and Maintained by Breaking Bug [Mobile Squad]",
+        "includeDate"           : true,
+        "navType"               : "vertical",
+        "theme"                 : "sandstone",
+        "linenums"              : true,
+        "collapseSymbols"       : false,
+        "inverseNav"            : false,
+        "outputSourceFiles"     : true ,
+        "outputSourcePath"      : true,
+        "syntaxTheme"           : "default"
+    }
+}

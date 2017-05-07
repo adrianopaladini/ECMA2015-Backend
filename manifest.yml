@@ -1,0 +1,10 @@
+applications:
+- path: .
+  memory: 256M
+  instances: 1
+  domain: w3ibm.mybluemix.net
+  name: ECMA2015 Backend Model
+  host: ecma2015-backend-model
+  disk_quota: 1024M
+  services:
+  - cloudantNoSQLDB Dedicated

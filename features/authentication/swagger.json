@@ -1,0 +1,47 @@
+{
+  "/authenticate": {
+    "post": {
+        "summary": "Authenticate on LDAP",
+        "description": "Based on the user''s intranet ID and password will validate into the bluepages (through LDAP) if user does exists.\n",
+        "parameters": [
+            {
+                "name": "username",
+                "in": "formData",
+                "description": "Intranet's ID of the user",
+                "required": true,
+                "type": "string",
+                "format": "email"
+            },
+            {
+                "name": "password",
+                "in": "formData",
+                "description": "Intranet's password of the user",
+                "required": true,
+                "type": "string",
+                "format": "password"
+            }
+        ],
+        "tags": [
+            "Authentication"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "responses": {
+            "200": {
+                "description": "A token",
+                "schema": {
+                    "type": "string",
+                    "description": "Holds and encripted key that represents an user logged into the app."
+                }
+            },
+            "default": {
+                "description": "Unexpected error",
+                "schema": {
+                    "$ref": "#/definitions/Error"
+                }
+            }
+        }
+    }
+  }
+}
